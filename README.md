@@ -39,7 +39,7 @@ The program calculates:
 
 * Number of **rainy hours**
 
-*Least common destination(s)
+* Least common destination(s)
 
 Results are saved to `results.txt` automatically.
 
@@ -119,15 +119,15 @@ Flight Data Analyzer
 
 3. Flight data rows are analyzed:
 
-* Distance
+** Distance
 
-* Weather
+** Weather
 
-* Airline codes
+** Airline codes
 
-* Delay times
+** Delay times
 
-* Destination frequencies
+** Destination frequencies
 
 4. A dictionary of computed results is returned
 
@@ -141,4 +141,4 @@ Flight Data Analyzer
 
 ## 📊 Sample Output (Terminal)
 
-![Sample Output]
+![Sample Output](images/Sample Output.png)
