@@ -121,15 +121,15 @@ Flight Data Analyzer
 
 3. Flight data rows are analyzed:
 
-** Distance
+* Distance
 
-** Weather
+* Weather
 
-** Airline codes
+* Airline codes
 
-** Delay times
+* Delay times
 
-** Destination frequencies
+* Destination frequencies
 
 4. A dictionary of computed results is returned
 
