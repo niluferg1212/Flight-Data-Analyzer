@@ -108,6 +108,8 @@ Flight Data Analyzer
 ├─ LHR2025.csv                 # Example dataset (user-provided)
 ├─ CDG2021.csv                 # Example dataset (user-provided)
 ├─ results.txt                 # Auto-generated analysis output
+├─ images
+│   └─ Sample Output.png
 └─ README.md                   # Project documentation
 ```
 
@@ -138,7 +140,3 @@ Flight Data Analyzer
 7. Histogram window opens showing flights per hour
 
 8. User may choose to analyze another dataset
-
-## 📊 Sample Output (Terminal)
-
-![Sample Output](images/Sample Output.png)
