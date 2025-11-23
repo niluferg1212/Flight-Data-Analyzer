@@ -9,6 +9,17 @@ Additional info
 ****************************************************************************
 
 """
+"""
+****************************************************************************
+Additional info
+ 1. I declare that my work contins no examples of misconduct, such as
+ plagiarism, or collusion.
+ 2. Any code taken from other sources is referenced within my code solution.
+ 3. Student ID: w2144848
+ 4. Date: 23.11.2025
+****************************************************************************
+
+"""
 from graphics import *
 import csv
 import math
@@ -185,7 +196,7 @@ def analyse_data(data_list):
 
 def save_results(airport_code, year, outcomes):
     airport_name = airport_valid[airport_code]
-    with open("results.txt", 'w') as f:
+    with open("results.txt", 'a') as f:
         f.write("*" * 50 + "\n")
         f.write(f"Flight Data Analysis for {airport_name} {year}\n")
         f.write("*" * 50 + "\n")
@@ -209,103 +220,66 @@ def save_results(airport_code, year, outcomes):
     print("Results saved to results.txt")
 
 
+def horizontal_histogram(hour_counts, airline_name, airport_name, year):
+    win = GraphWin(f'Departures by hour for {airline_name} from {airport_name}', 800, 550)
+    win.setBackground('lightgray')
 
-    # 1. Total number of departure flights
-    total_flights = len(data_list)
+    left_margin = 150
+    top_margin = 50
+    bar_height = 25
+    spacing = 10
 
-    # 2. Terminal 2 flights
-    terminal2_count = sum(1 for row in data_list if row[8] == "2")
-
-    # 3. Flights under 600 miles
-    under_600 = sum(1 for row in data_list if int(row[5]) < 600)
-
-    # 4. Air France flights
-    air_france_total = sum(1 for row in data_list if row[1].startswith("AF"))
-
-    # 5. Temperature < 15°C (WeatherConditions like “18°C clear”)
-    def get_temp(row):
-        temp_str = row[10].split()[0]     # "18°C"
-        return int(temp_str.replace("°C", ""))
-
-    temp_under_15 = sum(1 for row in data_list if get_temp(row) < 15)
-
-    # 6. Average British Airways flights per hour (BA*** flight numbers)
-    ba_total = sum(1 for row in data_list if row[1].startswith("BA"))
-    avg_ba_per_hour = round(ba_total / 12, 2)
-
-    # 7. % of total departures that are British Airways
-    percent_ba = round((ba_total / total_flights) * 100, 2)
-
-    # 8. % Air France flights delayed (delay = ActualDep > ScheduledDep)
-    def delayed(row):
-        return row[3] > row[2]  # string compare works: "00:27" > "00:12"
-
-    af_delayed = sum(1 for row in data_list if row[1].startswith("AF") and delayed(row))
-    percent_af_delayed = round((af_delayed / air_france_total) * 100, 2) if air_france_total else 0
-
-    # 9. Rain hours — check if “rain” exists in WeatherConditions
-    rain_hours = sum(1 for row in data_list if "rain" in row[10].lower())
-
-    # 10. Least common destinations
-    dest_counts = {}
-    for row in data_list:
-        dest = row[4]
-        dest_counts[dest] = dest_counts.get(dest, 0) + 1
-
-    min_count = min(dest_counts.values())
-    least_common_destinations = [d for d, c in dest_counts.items() if c == min_count]
-
-def plot_histogram(data_list, airline_valid, airport_valid, selected_year):
-    hours = []
-    for row in data_list:  
-        # row list olduğu için indeksle erişiyoruz
-        if row[1][:2].upper() == airline_valid.upper():  
-            try:
-                time_str = row[2]  # Scheduled Departure Time
-                hour = int(time_str.split(':')[0]) 
-                if 0 <= hour <= 11:
-                    hours.append(hour)
-            except (ValueError, IndexError):
-                pass
-
-    if len(hours) == 0:
-        print("No flights found for this airline.")
+    if not hour_counts:
+        print(f'Warning: No flights found for {airline_name}. Histogram can not be drawn.')
+        win.close()
+        return
+    
+    max_count = max(hour_counts.values())
+    
+    if max_count == 0:
+        print(f'Warning: No flights found for {airline_name} between 00:00 to 11.59. Histogram can not be drawn.')
+        win.close()
         return
 
-    # Histogram sayımları
-    hour_counts = {}
-    for h in hours:
-        hour_counts[h] = hour_counts.get(h, 0) + 1
+    scale =  500 / max_count
 
-    # Grafik penceresi
-    win = GraphWin(f"Histogram for {airline_valid}", 600, 400)
-    win.master.lift()
-
-    max_height = max(hour_counts.values())
-    bar_width = 500 / len(hour_counts)
-
-    x = 50
-    for h, count in sorted(hour_counts.items()):
-        height = (count / max_height) * 300
-        
-        bar = Rectangle(Point(x, 350), Point(x + bar_width, 350 - height))
-        bar.setFill("blue")
-        bar.draw(win)
-
-        # Hour label
-        label = Text(Point(x + bar_width/2, 360), str(h))
-        label.draw(win)
-
-        # Count label
-        count_label = Text(Point(x + bar_width/2, 350 - height - 10), str(count))
-        count_label.draw(win)
-
-        x += bar_width
-
-    # Title
-    title = Text(Point(300, 20),
-                 f"{airline_valid} Flights per Hour - {airport_valid} {selected_year}")
+    title = Text(Point(400, 30), f'Departures by hour for {airline_name} from {airport_name} {year}')
+    title.setSize(17)
+    title.setStyle('bold')
     title.draw(win)
+
+    y = top_margin
+
+    total_flights = sum(hour_counts.values())
+
+    for hour in range(12):
+        count = hour_counts.get(hour, 0)
+        bar_length = count * scale
+
+        rect = Rectangle(
+            Point(left_margin, y),
+            Point(left_margin + bar_length, y + bar_height)
+            )
+        rect.setFill('teal')
+        rect.draw(win)
+
+        hour_label = Text(Point(left_margin - 40, y + bar_height/2), f'{hour:02d}:00')
+        hour_label.draw(win)
+
+        if count > 0:
+            count_label = Text(Point(left_margin + bar_length + 10, y + bar_height/2), str(count))
+            count_label.draw(win)
+            
+        y += bar_height + spacing
+
+    x_label = Text(Point(400, 520), "Hours from 00:00 to 12:00")
+    x_label.setSize(12)
+    x_label.draw(win)
+
+    total_label = Text(Point(400, 490), f"Total flights shown: {total_flights}")
+    total_label.setStyle("bold")
+    total_label.setSize(12)
+    total_label.draw(win)
 
     try:
         win.getMouse()
@@ -313,6 +287,7 @@ def plot_histogram(data_list, airline_valid, airport_valid, selected_year):
         pass
     finally:
         win.close()
+        
 
 def display_histogram(flight_counts, airline_valid, airport_valid, year):
     """
@@ -386,8 +361,8 @@ def main():
         if data_list is None:
             continue
 
-        # Verileri analiz et
         outcomes = analyse_data(data_list)
+    
         
         print("*" * 80)
         print(f"File {airport_code}{selected_year}.csv selected - Planes departing {airport_valid[airport_code]} {selected_year}")
@@ -409,12 +384,29 @@ def main():
             print("The least common destination is " + least_common[0])
         else:
             print(f"The least common destinations are {least_common}")
-            
-        save_results(airport_code, selected_year, outcomes)
 
+        save_results(airport_code, selected_year, outcomes)
         # Airline code for histogram
         airline_code = get_airline_code()
-        plot_histogram(data_list, airline_code, airport_code, selected_year)
+        hour_counts_dict = {}
+        for row in data_list:
+            if row[1][:2].upper() == airline_code.upper(): 
+                try:
+                    # Scheduled Departure Time (index 2)
+                    time_str = row[2] 
+                    hour = int(time_str.split(':')[0]) # Saat kısmını al (Örn: '08:45' -> 8)
+                    
+                    if 0 <= hour <= 11:
+                        # Eğer saat 0-11 arasındaysa, ilgili indeksi artır
+                        hour_counts_dict[hour] = hour_counts_dict.get(hour, 0) + 1
+                        
+                except (ValueError, IndexError):
+                    pass # Hatalı saat formatlarını yoksay
+                
+        airline_name = airline_valid[airline_code]
+        airport_name = airport_valid[airport_code]
+                
+        horizontal_histogram(hour_counts_dict, airline_name, airport_name, selected_year)
 
         again = input("Do you want to select a new data file? Y/N: ").upper()
         if again == "N":
@@ -425,25 +417,3 @@ if __name__ == "__main__":
     main()
     
 #************************************************************************************************************
-
-
-selected_data_file="CDG2021.csv" #hard coded csv name to be replaced with your dynamically created filename
-load_csv(selected_data_file)     #calls the function "load_csv" sending the variable 'selected_data_file" as a parameter
-
-#Some Example code queries to be replaced with those required by the brief. Compare these outputs to the supplied CSV files
-
-print (f"The current file name is {selected_data_file}")
-print ("")
-print (f"First row of data_list is data_list[0] -> {data_list[0]}")
-print ("")
-print (f"Second item of the first row is flight number, data_list[0][1]      -> {data_list[0][1]}")
-print ("")
-print (f"Third item of the second row is scheduled depature, data_list[1][2] -> {data_list[1][2]}")
-
-  
-
-
-
-
-
-
