@@ -9,9 +9,9 @@ This program allows users to select an airport code and year, analyze flight dep
 
 * User selects:
 
-** Three-letter airport code (e.g., LHR, IST, FRA)
+* * Three-letter airport code (e.g., LHR, IST, FRA)
 
-** Four-digit year (2000–2025)
+* * Four-digit year (2000–2025)
 
 * Validates input codes
 
