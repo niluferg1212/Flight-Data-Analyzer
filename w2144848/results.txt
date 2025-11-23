@@ -1,0 +1,14 @@
+**************************************************
+Flight Data Analysis for London Heathrow 2025
+**************************************************
+Total flights from this airport: 490
+Flights departing Terminal Two: 106
+Departures on flights under 600 miles: 231
+Air France flights: 67
+Flights departing in temperatures below 15°C: 156
+Average British Airways flights per hour: 13.25
+British Airways percentage of departures: 32.45%
+Air France delayed percentage: 31.34%
+Hours with rain: 192
+Least common destination: Madrid  Adolfo Suárez-Barajas
+
